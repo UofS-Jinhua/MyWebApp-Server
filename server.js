@@ -5,13 +5,19 @@ const app = express();
 
 const port = 3000;
 
+const db_host = process.env.DB_HOST;
+const db_user = process.env.DB_USER;
+const db_password = process.env.DB_PASS;
+
+
+
 app.use(cors());
 app.use(express.json({ limit: "1000mb" }));
 
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "H@ppyF@ce9527",
+  host: db_host,
+  user: db_user,
+  password: db_password,
   database: "Notes",
 });
 

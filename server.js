@@ -9,6 +9,10 @@ const db_host = process.env.DB_HOST;
 const db_user = process.env.DB_USER;
 const db_password = process.env.DB_PASS;
 
+console.log(db_host);
+console.log(db_user);
+console.log(db_password);
+
 
 
 app.use(cors());

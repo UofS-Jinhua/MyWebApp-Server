@@ -5,31 +5,19 @@ const app = express();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
-const cookieParser = require("cookie-parser");
-
-const dotenv = require("dotenv");
-dotenv.config();
 
 const port = 3000;
 
 const db_host = process.env.DB_HOST;
 const db_user = process.env.DB_USER;
 const db_password = process.env.DB_PASS;
-const secretKey = process.env.SECRET_KEY;
-const origin_url = process.env.ORIGIN_URL;
 
-// console.log(db_host);
-// console.log(db_user);
-// console.log(db_password);
+console.log(db_host);
+console.log(db_user);
+console.log(db_password);
 
-app.use(
-  cors({
-    origin: origin_url, // 替换为你的前端应用的URL
-    credentials: true,
-  })
-);
+app.use(cors());
 app.use(express.json({ limit: "1000mb" }));
-app.use(cookieParser());
 
 const db = mysql.createConnection({
   host: db_host,
@@ -61,7 +49,6 @@ app.post(
   (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      console.log(errors.array());
       return res.status(400).json({ errors: errors.array() });
     }
 
@@ -69,47 +56,26 @@ app.post(
 
     let sql = "SELECT * FROM Users WHERE username = ?";
     db.query(sql, [username], async (err, result) => {
-      if (err) {
-        console.log(err);
-        throw err;
-      }
+      if (err) throw err;
       if (result.length === 0) {
-        console.log(result, "1 - Invalid username or password");
         return res.status(400).send("Invalid username or password");
       }
 
       const user = result[0];
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
-        // const bcrypt = require("bcrypt");
-
-        // const password = "199802101";
-        // const saltRounds = 10;
-
-        // bcrypt.hash(password, saltRounds, (err, hash) => {
-        //   if (err) {
-        //     console.error(err);
-        //     return;
-        //   }
-        //   console.log(`Hashed password: ${hash}`);
-        // });
         return res.status(400).send("Invalid username or password");
       }
 
       const token = jwt.sign({ id: user.id }, secretKey, { expiresIn: "1h" });
-      res.cookie("token", token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "strict",
-      });
-      res.send("Login successful");
+      res.json({ token });
     });
   }
 );
 
 // Middleware to authenticate token
 const authenticateToken = (req, res, next) => {
-  const token = req.cookies.token;
+  const token = req.header("Authorization").replace("Bearer ", "");
   if (!token) {
     return res.status(401).send("Access denied");
   }
@@ -122,11 +88,6 @@ const authenticateToken = (req, res, next) => {
     res.status(400).send("Invalid token");
   }
 };
-
-// check if the user is authenticated
-app.get("/check-auth", authenticateToken, (req, res) => {
-  res.send("Authenticated");
-});
 
 // Protected route example
 app.get("/protected", authenticateToken, (req, res) => {

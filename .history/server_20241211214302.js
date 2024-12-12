@@ -16,7 +16,6 @@ const db_host = process.env.DB_HOST;
 const db_user = process.env.DB_USER;
 const db_password = process.env.DB_PASS;
 const secretKey = process.env.SECRET_KEY;
-const origin_url = process.env.ORIGIN_URL;
 
 // console.log(db_host);
 // console.log(db_user);
@@ -24,7 +23,7 @@ const origin_url = process.env.ORIGIN_URL;
 
 app.use(
   cors({
-    origin: origin_url, // 替换为你的前端应用的URL
+    origin: "http://localhost:5173", // 替换为你的前端应用的URL
     credentials: true,
   })
 );

@@ -90,7 +90,7 @@ app.post(
       res.cookie("token", token, {
         httpOnly: true,
         secure: true,
-        sameSite: "None",
+        sameSite: "strict",
       });
       res.send("Login successful");
     });

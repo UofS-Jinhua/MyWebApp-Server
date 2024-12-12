@@ -21,12 +21,11 @@ const origin_url = process.env.ORIGIN_URL;
 // console.log(db_host);
 // console.log(db_user);
 // console.log(db_password);
-// console.log(secretKey);
+console.log(secretKey);
 
 app.use(
   cors({
     origin: origin_url, // 替换为你的前端应用的URL
-    // origin: `http://4.174.176.140`,
     credentials: true,
   })
 );
@@ -83,6 +82,18 @@ app.post(
       const user = result[0];
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
+        // const bcrypt = require("bcrypt");
+
+        // const password = "199802101";
+        // const saltRounds = 10;
+
+        // bcrypt.hash(password, saltRounds, (err, hash) => {
+        //   if (err) {
+        //     console.error(err);
+        //     return;
+        //   }
+        //   console.log(`Hashed password: ${hash}`);
+        // });
         return res.status(400).send("Invalid username or password");
       }
 
@@ -90,7 +101,7 @@ app.post(
       res.cookie("token", token, {
         httpOnly: true,
         secure: true,
-        sameSite: "None",
+        sameSite: "strict",
       });
       res.send("Login successful");
     });

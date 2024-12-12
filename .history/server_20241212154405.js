@@ -25,8 +25,8 @@ const origin_url = process.env.ORIGIN_URL;
 
 app.use(
   cors({
-    origin: origin_url, // 替换为你的前端应用的URL
-    // origin: `http://4.174.176.140`,
+    // origin: origin_url, // 替换为你的前端应用的URL
+    origin: `http://4.174.176.140`,
     credentials: true,
   })
 );
@@ -90,7 +90,7 @@ app.post(
       res.cookie("token", token, {
         httpOnly: true,
         secure: true,
-        sameSite: "None",
+        sameSite: "strict",
       });
       res.send("Login successful");
     });

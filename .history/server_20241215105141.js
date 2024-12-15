@@ -93,7 +93,9 @@ app.post(
       //   secure: true,
       //   sameSite: "None",
       // });
-      res.json({ token, message: "Login Sucessful" });
+      res.json({ token });
+
+      res.send("Login successful");
     });
   }
 );

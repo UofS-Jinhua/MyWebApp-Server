@@ -88,37 +88,23 @@ app.post(
 
       const token = jwt.sign({ id: user.id }, secretKey, { expiresIn: "1h" });
 
-      // res.cookie("token", token, {
-      //   httpOnly: true,
-      //   secure: true,
-      //   sameSite: "None",
-      // });
-      res.json({ token, message: "Login Sucessful" });
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+      });
+      res.send("Login successful");
     });
   }
 );
 
 // Middleware to authenticate token
-// const authenticateToken = (req, res, next) => {
-//   const token = req.cookies.token;
-//   if (!token) {
-//     return res.status(401).send("Access denied");
-//   }
-
-//   try {
-//     const verified = jwt.verify(token, secretKey);
-//     req.user = verified;
-//     next();
-//   } catch (err) {
-//     res.status(400).send("Invalid token");
-//   }
-// };
 const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  const token = authHeader && authHeader.split(" ")[1];
+  const token = req.cookies.token;
   if (!token) {
     return res.status(401).send("Access denied");
   }
+
   try {
     const verified = jwt.verify(token, secretKey);
     req.user = verified;

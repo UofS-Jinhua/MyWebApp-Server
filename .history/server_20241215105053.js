@@ -93,32 +93,20 @@ app.post(
       //   secure: true,
       //   sameSite: "None",
       // });
-      res.json({ token, message: "Login Sucessful" });
+      res.json({ token });
+
+      res.send("Login successful");
     });
   }
 );
 
 // Middleware to authenticate token
-// const authenticateToken = (req, res, next) => {
-//   const token = req.cookies.token;
-//   if (!token) {
-//     return res.status(401).send("Access denied");
-//   }
-
-//   try {
-//     const verified = jwt.verify(token, secretKey);
-//     req.user = verified;
-//     next();
-//   } catch (err) {
-//     res.status(400).send("Invalid token");
-//   }
-// };
 const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  const token = authHeader && authHeader.split(" ")[1];
+  const token = req.cookies.token;
   if (!token) {
     return res.status(401).send("Access denied");
   }
+
   try {
     const verified = jwt.verify(token, secretKey);
     req.user = verified;

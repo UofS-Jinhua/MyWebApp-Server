@@ -301,16 +301,6 @@ app.post("/subsubcategories", (req, res) => {
   });
 });
 
-// update a Subsubcategory's name with given ID
-app.put("/subsubcategories/:id", (req, res) => {
-  let sql = `UPDATE Subsubcategories SET name = ? WHERE id = ?`;
-  let values = [req.body.name, req.params.id];
-  db.query(sql, values, (err, result) => {
-    if (err) throw err;
-    res.send(result);
-  });
-});
-
 // delete a Subsubcategory by given ID
 app.delete("/subsubcategories/:id", (req, res) => {
   const subsubcategory_id = req.params.id;

@@ -215,16 +215,6 @@ app.get("/subcategories/:id", (req, res) => {
   });
 });
 
-// update a Subcategory's name with given ID
-app.put("/subcategories/:id", (req, res) => {
-  let sql = `UPDATE Subcategories SET name = ? WHERE id = ?`;
-  let values = [req.body.name, req.params.id];
-  db.query(sql, values, (err, result) => {
-    if (err) throw err;
-    res.send(result);
-  });
-});
-
 // post a new Subcategory
 app.post("/subcategories", (req, res) => {
   const { id: category_id, name: sub_name } = req.body;
@@ -296,16 +286,6 @@ app.post("/subsubcategories", (req, res) => {
 
   let sql = "INSERT INTO Subsubcategories SET ?";
   db.query(sql, post, (err, result) => {
-    if (err) throw err;
-    res.send(result);
-  });
-});
-
-// update a Subsubcategory's name with given ID
-app.put("/subsubcategories/:id", (req, res) => {
-  let sql = `UPDATE Subsubcategories SET name = ? WHERE id = ?`;
-  let values = [req.body.name, req.params.id];
-  db.query(sql, values, (err, result) => {
     if (err) throw err;
     res.send(result);
   });

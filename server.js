@@ -25,8 +25,7 @@ const origin_url = process.env.ORIGIN_URL;
 
 app.use(
   cors({
-    origin: origin_url, // 替换为你的前端应用的URL
-    // origin: `http://4.174.176.140`,
+    origin: origin_url || "http://127.0.0.1:443", // 替换为你的前端应用的URL
     credentials: true,
   })
 );

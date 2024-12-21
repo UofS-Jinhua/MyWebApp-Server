@@ -39,6 +39,8 @@ const db = mysql.createConnection({
   database: "Notes",
 });
 
+
+
 // connect db
 db.connect((err) => {
   if (err) {
@@ -46,6 +48,31 @@ db.connect((err) => {
   }
   console.log("MySQL connected...");
 });
+
+
+// hnadling db disconnect
+function handleDisconnect() {
+  db.connect((err) => {
+    if (err) {
+      console.log("Error when connecting to db:", err);
+      setTimeout(handleDisconnect, 5000); // set 5 seconds to try to connect again
+    } else {
+      console.log("MySQL connected...");
+    }
+  });
+}
+
+// db error event
+db.on('error', (err) => {
+  console.log('db error', err);
+  if (err.code === 'PROTOCOL_CONNECTION_LOST' || err.code === 'ECONNRESET' || err.code === 'ETIMEDOUT' || err.fatal) {
+    handleDisconnect(); // reconnect
+  } else {
+    throw err;
+  }
+});
+
+
 
 // simple get request for testing
 app.get("/", (req, res) => {

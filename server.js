@@ -47,6 +47,7 @@ db.connect((err) => {
     throw err;
   }
   console.log("MySQL connected...");
+  startHeartbeat();
 });
 
 
@@ -71,6 +72,19 @@ db.on('error', (err) => {
     throw err;
   }
 });
+
+function startHeartbeat() {
+  setInterval(() => {
+    db.query('SELECT 1', (err) => {
+      if (err) {
+        console.log('Heartbeat query failed:', err);
+        handleDisconnect();
+      } else {
+        console.log('Heartbeat query succeeded');
+      }
+    });
+  }, 60000); 
+}
 
 
 
